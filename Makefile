@@ -8,4 +8,4 @@ tests:
 	stack test --fast
 
 ghci:
-	stack ghci haskell-bbcode-parser-reactflux
+	stack ghci haskell-media-embed
