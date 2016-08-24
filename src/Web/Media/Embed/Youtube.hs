@@ -1,6 +1,7 @@
-{-# LANGUAGE BangPatterns   #-}
-{-# LANGUAGE DeriveAnyClass #-}
-{-# LANGUAGE DeriveGeneric  #-}
+{-# LANGUAGE BangPatterns      #-}
+{-# LANGUAGE DeriveAnyClass    #-}
+{-# LANGUAGE DeriveGeneric     #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 -- | This module contains types for embedding youtube media
 -- reference: https://developers.google.com/youtube/player_parameters
@@ -12,6 +13,7 @@ module Web.Media.Embed.Youtube (
   , YoutubeControls (..)
   , YoutubeTheme (..)
   , YoutubeEmbed (..)
+  , defaultYoutubeEmbed
 ) where
 
 
@@ -121,3 +123,30 @@ data YoutubeEmbed = YoutubeEmbed {
   youtubeTheme          :: !(Maybe YoutubeTheme)      -- ^ Dark or light theme.
                                                       -- default: Dark
 } deriving (Show, Eq, Generic, Typeable, NFData)
+
+
+
+defaultYoutubeEmbed :: YoutubeEmbed
+defaultYoutubeEmbed = YoutubeEmbed {
+  youtubeSrc            = VideoURL "https://www.youtube.com/watch?v = F6mHaUoNpOg",
+  youtubeHeight         = Nothing,
+  youtubeWidth          = Nothing,
+  youtubeAutoPlay       = Nothing,
+  youtubeCCLoadPolicy   = Nothing,
+  youtubeColor          = Nothing,
+  youtubeControls       = Nothing,
+  youtubeDisableKb      = Nothing,
+  youtubeEnableJsApi    = Nothing,
+  youtubeEnd            = Nothing,
+  youtubeFs             = Nothing,
+  youtubeHl             = Nothing,
+  youtubeIvLoadPolicy   = (),
+  youtubeLoop           = Nothing,
+  youtubeModestBranding = Nothing,
+  youtubeOrigin         = Nothing,
+  youtubePlaysInline    = Nothing,
+  youtubeRel            = Nothing,
+  youtubeShowInfo       = Nothing,
+  youtubeStart          = Nothing,
+  youtubeTheme          = Nothing
+}
