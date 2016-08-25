@@ -32,6 +32,19 @@ spec = do
   --     (youtubeSrc $ parseYoutube "https://www.youtube.com/adarqui") `shouldBe` VideoUser "adarqui"
 
   describe "simpleYoutubeEmbedToIFrame" $ do
+
     it "should replace watch?v= with embad/" $ do
       (iframeSrc $ simpleYoutubeEmbedToIFrame "https://www.youtube.com/watch?v=gBzBn1wKWLY" defaultIFrame)
         `shouldBe` "https://www.youtube.com/embed/gBzBn1wKWLY"
+
+    it "should not replace anything" $ do
+      (iframeSrc $ simpleYoutubeEmbedToIFrame "https://www.youtube.com/embed/gBzBn1wKWLY" defaultIFrame)
+        `shouldBe` "https://www.youtube.com/embed/gBzBn1wKWLY"
+
+    it "should replace playlist?list= with embed/videoseries?list=" $ do
+      (iframeSrc $ simpleYoutubeEmbedToIFrame "https://www.youtube.com/playlist?list=PL87FDF6D03C86EA5E" defaultIFrame)
+        `shouldBe` "https://www.youtube.com/embed/videoseries?list=PL87FDF6D03C86EA5E"
+
+    it "should not replace anything" $ do
+      (iframeSrc $ simpleYoutubeEmbedToIFrame "https://www.youtube.com/embed/videoseries?list=PL87FDF6D03C86EA5E" defaultIFrame)
+        `shouldBe` "https://www.youtube.com/embed/videoseries?list=PL87FDF6D03C86EA5E"

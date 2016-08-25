@@ -256,6 +256,8 @@ parseYoutube _ = undefined
 
 
 
+-- | Really simple function to keep the url basically the same, but outfitting it for youtube embedding
+--
 simpleYoutubeEmbedToIFrame :: Text -> IFrame -> IFrame
 simpleYoutubeEmbedToIFrame link IFrame{..} =
   IFrame {
@@ -265,4 +267,6 @@ simpleYoutubeEmbedToIFrame link IFrame{..} =
     iframeBoarder = iframeBoarder
   }
   where
-  youtube_src = Text.replace "watch?v=" "embed/" link
+  youtube_src = Text.replace "playlist?" "embed/videoseries?" $
+                  Text.replace "watch?v=" "embed/"
+                  link
