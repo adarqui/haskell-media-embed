@@ -1,10 +1,12 @@
-{-# LANGUAGE BangPatterns    #-}
-{-# LANGUAGE DeriveAnyClass  #-}
-{-# LANGUAGE DeriveGeneric   #-}
-{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE BangPatterns      #-}
+{-# LANGUAGE DeriveAnyClass    #-}
+{-# LANGUAGE DeriveGeneric     #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RecordWildCards   #-}
 
 module Web.Media.Embed.IFrame (
-  IFrame (..)
+  IFrame (..),
+  defaultIFrame
 ) where
 
 
@@ -22,3 +24,13 @@ data IFrame = IFrame {
   iframeWidth   :: !(Maybe Int),
   iframeBoarder :: !(Maybe Bool)
 } deriving (Show, Eq, Generic, Typeable, NFData)
+
+
+
+defaultIFrame :: IFrame
+defaultIFrame = IFrame {
+  iframeSrc     = "",
+  iframeHeight  = Nothing,
+  iframeWidth   = Nothing,
+  iframeBoarder = Nothing
+}
