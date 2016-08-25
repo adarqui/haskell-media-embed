@@ -20,6 +20,16 @@ class ToParam a where
 
 
 
+instance ToParam Text where
+  toParam = id
+
+
+
+instance ToParam Int where
+  toParam = Text.pack . show
+
+
+
 maybeParam :: ToParam a => Maybe a -> Text -> [Text]
 maybeParam m_param param_name = maybe [] (\v -> [param_name <> "=" <> toParam v]) m_param
 

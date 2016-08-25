@@ -152,7 +152,7 @@ data YoutubeEmbed = YoutubeEmbed {
 
 defaultYoutubeEmbed :: YoutubeEmbed
 defaultYoutubeEmbed = YoutubeEmbed {
-  youtubeSrc            = VideoURL "https://www.youtube.com/watch?v = F6mHaUoNpOg",
+  youtubeSrc            = VideoURL "https://www.youtube.com/embed/F6mHaUoNpOg",
   youtubeHeight         = Nothing,
   youtubeWidth          = Nothing,
   youtubeAutoPlay       = Nothing,
@@ -194,23 +194,39 @@ youtubeEmbedToURL YoutubeEmbed{..} =
                    VideoPlaylist playlist_id -> (youtubeEmbedBaseURL, Just $ "listType=playlist&list=PL" <> playlist_id)
                    VideoUser user_id         -> (youtubeEmbedBaseURL, Just $ "listType=user_upload&list=" <> user_id)
                    VideoSearch search        -> (youtubeEmbedBaseURL, Just $ "listType=search&list=" <> search)
-  url_params     = autoplay <> cc_load_policy <> color <> disable_kb
-  autoplay       = maybeParam youtubeAutoPlay "autoplay"
-  cc_load_policy = maybeParam youtubeCCLoadPolicy "cc_load_policy"
-  color          = maybeParam youtubeColor "color"
-  disable_kb     = maybeParam youtubeDisableKb "disablekb"
-  -- youtubeControls       = Nothing,
-  -- youtubeDisableKb      = Nothing,
-  -- youtubeEnableJsApi    = Nothing,
-  -- youtubeEnd            = Nothing,
-  -- youtubeFs             = Nothing,
-  -- youtubeHl             = Nothing,
-  -- youtubeIvLoadPolicy   = (),
-  -- youtubeLoop           = Nothing,
-  -- youtubeModestBranding = Nothing,
-  -- youtubeOrigin         = Nothing,
-  -- youtubePlaysInline    = Nothing,
-  -- youtubeRel            = Nothing,
-  -- youtubeShowInfo       = Nothing,
-  -- youtubeStart          = Nothing,
-  -- youtubeTheme          = Nothing
+  autoplay          = maybeParam youtubeAutoPlay "autoplay"
+  cc_load_policy    = maybeParam youtubeCCLoadPolicy "cc_load_policy"
+  color             = maybeParam youtubeColor "color"
+  controls          = maybeParam youtubeControls "controls"
+  disable_kb        = maybeParam youtubeDisableKb "disablekb"
+  enable_js_api     = maybeParam youtubeEnableJsApi "enable_js_api"
+  end               = maybeParam youtubeEnd "end"
+  fs                = maybeParam youtubeFs "fs"
+  hl                = maybeParam youtubeHl "hl"
+  -- iv_load_policy = maybeParam youtubeIvLoadPolicy "iv_load_policy"
+  loop              = maybeParam youtubeLoop "loop"
+  modest_branding   = maybeParam youtubeModestBranding "modest_branding"
+  origin            = maybeParam youtubeOrigin "origin"
+  plays_inline      = maybeParam youtubePlaysInline "plays_inline"
+  rel               = maybeParam youtubeRel "rel"
+  show_info         = maybeParam youtubeShowInfo "show_info"
+  start             = maybeParam youtubeStart "start"
+  theme             = maybeParam youtubeTheme "theme"
+  url_params        = concat [ autoplay
+                                  , cc_load_policy
+                                  , color
+                                  , controls
+                                  , disable_kb
+                                  , enable_js_api
+                                  , end
+                                  , fs
+                                  , hl
+                                  , loop
+                                  , modest_branding
+                                  , origin
+                                  , plays_inline
+                                  , rel
+                                  , show_info
+                                  , start
+                                  , theme
+                                  ]
