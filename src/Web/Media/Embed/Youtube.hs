@@ -18,6 +18,7 @@ module Web.Media.Embed.Youtube (
   , defaultYoutubeEmbed
   , youtubeEmbedBaseURL
   , youtubeEmbedToURL
+  , youtubeEmbedToIFrame
 ) where
 
 
@@ -29,12 +30,12 @@ import           Data.Typeable            (Typeable)
 import           GHC.Generics             (Generic)
 
 import           Web.Media.Embed.Internal
+import           Web.Media.Embed.IFrame
 
 
 
 data YoutubeSource
-  = VideoID Text       -- ^ VIDEO_ID
-  | VideoURL Text      -- ^ https://www.youtube.com/embed/VIDEO_ID
+  = VideoID Text       -- ^ VIDEO_ID becomes https://www.youtube.com/embed/VIDEO_ID
   | VideoPlaylist Text -- ^ https://www.youtube.com/embed?listType=playlist&list=PLAYLIST (PLXXX)
   | VideoUser Text     -- ^ https://www.youtube.com/embed?listType=user_uploads&list=USERNAME
   | VideoSearch Text   -- ^ https://www.youtube.com/embed?listType=search&list=QUERY
@@ -152,7 +153,7 @@ data YoutubeEmbed = YoutubeEmbed {
 
 defaultYoutubeEmbed :: YoutubeEmbed
 defaultYoutubeEmbed = YoutubeEmbed {
-  youtubeSrc            = VideoURL "https://www.youtube.com/embed/F6mHaUoNpOg",
+  youtubeSrc            = VideoID "F6mHaUoNpOg",
   youtubeHeight         = Nothing,
   youtubeWidth          = Nothing,
   youtubeAutoPlay       = Nothing,
@@ -190,7 +191,6 @@ youtubeEmbedToURL YoutubeEmbed{..} =
   where
   (url, qs) = case youtubeSrc of
                    VideoID video_id          -> (youtubeEmbedBaseURL <> "/" <> video_id, Nothing)
-                   VideoURL video_url        -> (video_url, Nothing)
                    VideoPlaylist playlist_id -> (youtubeEmbedBaseURL, Just $ "listType=playlist&list=PL" <> playlist_id)
                    VideoUser user_id         -> (youtubeEmbedBaseURL, Just $ "listType=user_upload&list=" <> user_id)
                    VideoSearch search        -> (youtubeEmbedBaseURL, Just $ "listType=search&list=" <> search)
@@ -230,3 +230,17 @@ youtubeEmbedToURL YoutubeEmbed{..} =
                                   , start
                                   , theme
                                   ]
+
+
+
+
+youtubeEmbedToIFrame :: YoutubeEmbed -> IFrame -> IFrame
+youtubeEmbedToIFrame youtube_embed@YoutubeEmbed{..} IFrame{..} =
+  IFrame {
+    iframeSrc     = youtube_src,
+    iframeHeight  = youtubeHeight,
+    iframeWidth   = youtubeWidth,
+    iframeBoarder = iframeBoarder
+  }
+  where
+  youtube_src = youtubeEmbedToURL youtube_embed

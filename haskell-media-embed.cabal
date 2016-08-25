@@ -17,6 +17,7 @@ library
   hs-source-dirs:      src
   exposed-modules:     Web.Media.Embed
                      , Web.Media.Embed.Internal
+                     , Web.Media.Embed.IFrame
                      , Web.Media.Embed.Youtube
   build-depends:       base >= 4.7 && < 5
                      , deepseq
