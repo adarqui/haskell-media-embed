@@ -19,12 +19,15 @@ module Web.Media.Embed.Youtube (
   , youtubeEmbedBaseURL
   , youtubeEmbedToURL
   , youtubeEmbedToIFrame
+  , parseYoutube
+  , simpleYoutubeEmbedToIFrame
 ) where
 
 
 
 import           Control.DeepSeq          (NFData)
 import           Data.Monoid              ((<>))
+import qualified Data.Text                as Text
 import           Data.Text                (Text)
 import           Data.Typeable            (Typeable)
 import           GHC.Generics             (Generic)
@@ -244,3 +247,22 @@ youtubeEmbedToIFrame youtube_embed@YoutubeEmbed{..} IFrame{..} =
   }
   where
   youtube_src = youtubeEmbedToURL youtube_embed
+
+
+
+parseYoutube :: Text -> YoutubeEmbed
+parseYoutube _ = undefined
+
+
+
+
+simpleYoutubeEmbedToIFrame :: Text -> IFrame -> IFrame
+simpleYoutubeEmbedToIFrame link IFrame{..} =
+  IFrame {
+    iframeSrc     = youtube_src,
+    iframeHeight  = iframeHeight,
+    iframeWidth   = iframeWidth,
+    iframeBoarder = iframeBoarder
+  }
+  where
+  youtube_src = Text.replace "watch?v=" "embed/" link
