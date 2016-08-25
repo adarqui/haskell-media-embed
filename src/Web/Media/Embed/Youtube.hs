@@ -2,9 +2,11 @@
 {-# LANGUAGE DeriveAnyClass    #-}
 {-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RecordWildCards   #-}
 
 -- | This module contains types for embedding youtube media
 -- reference: https://developers.google.com/youtube/player_parameters
+--
 
 module Web.Media.Embed.Youtube (
     YoutubeSource (..)
@@ -14,14 +16,19 @@ module Web.Media.Embed.Youtube (
   , YoutubeTheme (..)
   , YoutubeEmbed (..)
   , defaultYoutubeEmbed
+  , youtubeEmbedBaseURL
+  , youtubeEmbedToURL
 ) where
 
 
 
-import           Control.DeepSeq (NFData)
-import           Data.Text       (Text)
-import           Data.Typeable   (Typeable)
-import           GHC.Generics    (Generic)
+import           Control.DeepSeq          (NFData)
+import           Data.Monoid              ((<>))
+import           Data.Text                (Text)
+import           Data.Typeable            (Typeable)
+import           GHC.Generics             (Generic)
+
+import           Web.Media.Embed.Internal
 
 
 
@@ -40,12 +47,20 @@ data YoutubeOnOff
   | Off
   deriving (Show, Eq, Generic, Typeable, NFData)
 
+instance ToParam YoutubeOnOff where
+  toParam On  = "1"
+  toParam Off = "0"
+
 
 
 data YoutubeColor
   = Red
   | White
   deriving (Show, Eq, Generic, Typeable, NFData)
+
+instance ToParam YoutubeColor where
+  toParam Red   = "red"
+  toParam White = "white"
 
 
 
@@ -55,12 +70,21 @@ data YoutubeControls
   | ControlsFlash
   deriving (Show, Eq, Generic, Typeable, NFData)
 
+instance ToParam YoutubeControls where
+  toParam ControlsNone   = "0"
+  toParam ControlsIFrame = "1"
+  toParam ControlsFlash  = "2"
+
 
 
 data YoutubeTheme
   = Dark
   | Light
   deriving (Show, Eq, Generic, Typeable, NFData)
+
+instance ToParam YoutubeTheme where
+  toParam Dark  = "dark"
+  toParam Light = "light"
 
 
 
@@ -150,3 +174,43 @@ defaultYoutubeEmbed = YoutubeEmbed {
   youtubeStart          = Nothing,
   youtubeTheme          = Nothing
 }
+
+
+
+youtubeEmbedBaseURL :: Text
+youtubeEmbedBaseURL = "https://youtube.com/embed"
+
+
+
+youtubeEmbedToURL :: YoutubeEmbed -> Text
+youtubeEmbedToURL YoutubeEmbed{..} =
+  case qs of
+    Nothing -> url <> "?" <> buildParams url_params
+    Just qs' -> url <> qs' <> buildParams url_params
+  where
+  (url, qs) = case youtubeSrc of
+                   VideoID video_id          -> (youtubeEmbedBaseURL <> "/" <> video_id, Nothing)
+                   VideoURL video_url        -> (video_url, Nothing)
+                   VideoPlaylist playlist_id -> (youtubeEmbedBaseURL, Just $ "listType=playlist&list=PL" <> playlist_id)
+                   VideoUser user_id         -> (youtubeEmbedBaseURL, Just $ "listType=user_upload&list=" <> user_id)
+                   VideoSearch search        -> (youtubeEmbedBaseURL, Just $ "listType=search&list=" <> search)
+  url_params     = autoplay <> cc_load_policy <> color <> disable_kb
+  autoplay       = maybeParam youtubeAutoPlay "autoplay"
+  cc_load_policy = maybeParam youtubeCCLoadPolicy "cc_load_policy"
+  color          = maybeParam youtubeColor "color"
+  disable_kb     = maybeParam youtubeDisableKb "disablekb"
+  -- youtubeControls       = Nothing,
+  -- youtubeDisableKb      = Nothing,
+  -- youtubeEnableJsApi    = Nothing,
+  -- youtubeEnd            = Nothing,
+  -- youtubeFs             = Nothing,
+  -- youtubeHl             = Nothing,
+  -- youtubeIvLoadPolicy   = (),
+  -- youtubeLoop           = Nothing,
+  -- youtubeModestBranding = Nothing,
+  -- youtubeOrigin         = Nothing,
+  -- youtubePlaysInline    = Nothing,
+  -- youtubeRel            = Nothing,
+  -- youtubeShowInfo       = Nothing,
+  -- youtubeStart          = Nothing,
+  -- youtubeTheme          = Nothing
