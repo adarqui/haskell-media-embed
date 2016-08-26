@@ -27,6 +27,14 @@ import           Web.Media.Embed.IFrame
 
 -- | Really simple function to keep the url basically the same, but outfitting it for instagram embedding
 --
+-- Our link needs to look like:
+-- https://www.instagram.com/p/XXX/embed/?taken-by=andrewdarqui
+-- https://www.instagram.com/p/XXX/embed
+-- https://www.instagram.com/p/XXX/embed/
+-- https://www.instagram.com/p/XXX/?taken-by=andrewdarqui
+-- https://www.instagram.com/p/XXX/
+-- https://www.instagram.com/p/XXX
+--
 simpleInstagramEmbedToIFrame :: Text -> IFrame -> IFrame
 simpleInstagramEmbedToIFrame link IFrame{..} =
   IFrame {
@@ -38,4 +46,10 @@ simpleInstagramEmbedToIFrame link IFrame{..} =
     iframeScrolling = iframeScrolling
   }
   where
-  instagram_src = link
+  instagram_src =
+    case Text.breakOnAll "/embed/" link of
+      [] -> case Text.splitOn "?" link of
+        [url, params] -> (Text.dropWhileEnd (== '/') url) <> "/embed/?" <> params
+        _             -> link <> "/embed/"
+      _  -> link
+
