@@ -240,10 +240,12 @@ youtubeEmbedToURL YoutubeEmbed{..} =
 youtubeEmbedToIFrame :: YoutubeEmbed -> IFrame -> IFrame
 youtubeEmbedToIFrame youtube_embed@YoutubeEmbed{..} IFrame{..} =
   IFrame {
-    iframeSrc     = youtube_src,
-    iframeHeight  = youtubeHeight,
-    iframeWidth   = youtubeWidth,
-    iframeBoarder = iframeBoarder
+    iframeSrc       = youtube_src,
+    iframeName      = iframeName,
+    iframeHeight    = youtubeHeight,
+    iframeWidth     = youtubeWidth,
+    iframeBoarder   = iframeBoarder,
+    iframeScrolling = iframeScrolling
   }
   where
   youtube_src = youtubeEmbedToURL youtube_embed
@@ -261,10 +263,12 @@ parseYoutube _ = undefined
 simpleYoutubeEmbedToIFrame :: Text -> IFrame -> IFrame
 simpleYoutubeEmbedToIFrame link IFrame{..} =
   IFrame {
-    iframeSrc     = youtube_src,
-    iframeHeight  = iframeHeight,
-    iframeWidth   = iframeWidth,
-    iframeBoarder = iframeBoarder
+    iframeSrc       = youtube_src,
+    iframeName      = iframeName,
+    iframeHeight    = iframeHeight,
+    iframeWidth     = iframeWidth,
+    iframeBoarder   = iframeBoarder,
+    iframeScrolling = iframeScrolling
   }
   where
   youtube_src = Text.replace "playlist?" "embed/videoseries?" $

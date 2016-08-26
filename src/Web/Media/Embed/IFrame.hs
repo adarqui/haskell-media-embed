@@ -1,12 +1,12 @@
-{-# LANGUAGE BangPatterns      #-}
 {-# LANGUAGE DeriveAnyClass    #-}
 {-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards   #-}
 
 module Web.Media.Embed.IFrame (
-  IFrame (..),
-  defaultIFrame
+    IFrameScrolling (..)
+  , IFrame (..)
+  , defaultIFrame
 ) where
 
 
@@ -18,19 +18,38 @@ import           GHC.Generics    (Generic)
 
 
 
+data IFrameScrolling
+  = ScrollingNo
+  | ScrollingYes
+  | ScrollingAuto
+  deriving (Eq, Generic, Typeable, NFData)
+
+instance Show IFrameScrolling where
+  show scrolling =
+    case scrolling of
+      ScrollingNo   -> "no"
+      ScrollingYes  -> "yes"
+      ScrollingAuto -> "auto"
+
+
+
 data IFrame = IFrame {
-  iframeSrc     :: Text,
-  iframeHeight  :: !(Maybe Int),
-  iframeWidth   :: !(Maybe Int),
-  iframeBoarder :: !(Maybe Bool)
+  iframeSrc       :: !Text,
+  iframeName      :: !(Maybe Text),
+  iframeHeight    :: !(Maybe Int),
+  iframeWidth     :: !(Maybe Int),
+  iframeBoarder   :: !(Maybe Bool),
+  iframeScrolling :: !(Maybe IFrameScrolling)
 } deriving (Show, Eq, Generic, Typeable, NFData)
 
 
 
 defaultIFrame :: IFrame
 defaultIFrame = IFrame {
-  iframeSrc     = "",
-  iframeHeight  = Nothing,
-  iframeWidth   = Nothing,
-  iframeBoarder = Nothing
+  iframeSrc       = "",
+  iframeName      = Nothing,
+  iframeHeight    = Nothing,
+  iframeWidth     = Nothing,
+  iframeBoarder   = Nothing,
+  iframeScrolling = Nothing
 }

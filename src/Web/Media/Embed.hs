@@ -4,5 +4,6 @@ module Web.Media.Embed (
 
 
 
-import           Web.Media.Embed.IFrame  as A
-import           Web.Media.Embed.Youtube as A
+import           Web.Media.Embed.IFrame    as A
+import           Web.Media.Embed.Instagram as A
+import           Web.Media.Embed.Youtube   as A
