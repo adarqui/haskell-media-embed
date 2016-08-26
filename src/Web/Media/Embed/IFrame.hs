@@ -11,10 +11,12 @@ module Web.Media.Embed.IFrame (
 
 
 
-import           Control.DeepSeq (NFData)
-import           Data.Text       (Text)
-import           Data.Typeable   (Typeable)
-import           GHC.Generics    (Generic)
+import           Control.DeepSeq          (NFData)
+import           Data.Text                (Text)
+import           Data.Typeable            (Typeable)
+import           GHC.Generics             (Generic)
+
+import           Web.Media.Embed.Internal
 
 
 
@@ -22,10 +24,10 @@ data IFrameScrolling
   = ScrollingNo
   | ScrollingYes
   | ScrollingAuto
-  deriving (Eq, Generic, Typeable, NFData)
+  deriving (Show, Eq, Generic, Typeable, NFData)
 
-instance Show IFrameScrolling where
-  show scrolling =
+instance ToParam IFrameScrolling where
+  toParam scrolling =
     case scrolling of
       ScrollingNo   -> "no"
       ScrollingYes  -> "yes"
